@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
+import { House } from "lucide-react";
 
 const ThankYouPage = () => {
   const router = useRouter();
@@ -22,12 +23,20 @@ const ThankYouPage = () => {
           for developing websites, saas products and many other online based
           services. I hope this can be beneficial for you all.
         </p>
+        <p className="text-xl md:text-2xl mb-8">
+          The repo for this presentation is available for free on <a className="text-black font-semibold underline" href="https://github.com/ciaranjmcg0v/coaching-call" target="_blank">Github</a>. I will
+          also be adding more content to it in the future, with coding examples,
+          short tutorials and additional resources.
+        </p>
         <div className="flex justify-center gap-6">
           <button
-            className="px-8 py-3 bg-indigo-700 hover:bg-indigo-800 text-white text-lg rounded-lg transition duration-300 cursor-pointer"
+            className="flex items-center pl-1 pr-4 py-1 bg-indigo-400 hover:bg-indigo-600 text-white text-lg rounded-full transition duration-300 cursor-pointer"
             onClick={handleGoHome}
           >
-            Go to Home
+            <div className="flex items-center justify-center bg-indigo-900 rounded-full p-1">
+              <House size={24} className="text-indigo-300" />
+            </div>
+            <span className="ml-2 text-sm">Home</span>
           </button>
         </div>
       </div>

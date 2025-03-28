@@ -53,8 +53,8 @@ button {
 **Good Example (High Contrast Text)**  
 ```css
 button {
-  background-color: #0055cc;
-  color: #ffffff;
+  background-color: #0055cc; // blue
+  color: #ffffff; // white
 }
 ```
 ✅ The contrast is much better for readability.  

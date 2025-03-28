@@ -46,6 +46,37 @@ const ParentComponent = () => {
 ## **2. Using Transitions & Animations Efficiently**  
 Transitions should be smooth and efficient, avoiding layout shifts and jank.  
 
+
+## F.Y.I
+
+"Jank" in the context of web development and user interface design refers to stuttering, skipping, or visually inconsistent animations and transitions that create a poor user experience. It's essentially when the UI moves in an uneven, jerky way rather than smoothly.
+
+Technically speaking, jank occurs when:
+
+1. Frames are dropped during animations or transitions
+2. The browser can't maintain a consistent frame rate (ideally 60fps)
+3. The rendering pipeline gets blocked by expensive operations
+
+Common causes of jank include:
+
+- Layout thrashing (repeatedly forcing the browser to recalculate layout)
+- Expensive CSS properties that trigger layout recalculations (like box-shadow, filter)
+- JavaScript that blocks the main thread
+- Inefficient DOM operations
+- Unoptimized images or assets
+- Heavy calculations during animations
+
+To create smooth, jank-free transitions, developers typically:
+- Use CSS properties that only trigger compositing (like transform and opacity)
+- Defer non-critical work until after animations complete
+- Use requestAnimationFrame for JavaScript animations
+- Implement debouncing/throttling for event handlers
+- Avoid layout changes during animations
+- Pre-optimize images and other assets
+
+Users perceive jank as a sign of poor quality or performance issues, which is why smooth transitions are so important for a professional user experience.
+
+
 ### **Best Practices:**  
 ✅ **Use `react-transition-group` for enter/exit animations**  
 ✅ **Use `useTransition()` for non-blocking state updates**  

@@ -1,5 +1,6 @@
 "use client";
 
+import { ArrowLeft, ArrowRight, ExternalLink, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
@@ -75,6 +76,7 @@ const sectionFiles = [
 const Presentation = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [content, setContent] = useState("");
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -107,6 +109,14 @@ const Presentation = () => {
     fetchContent();
   }, [currentIndex]);
 
+  const handleSectionChange = () => {
+    setLoading(true);
+    setTimeout(() => {
+      handleNext();
+      setLoading(false);
+    }, 500);
+  };
+
   // Rest of your component remains the same
   const handleNext = () => {
     if (currentIndex < sectionFiles.length - 1) {
@@ -126,79 +136,98 @@ const Presentation = () => {
 
   // The rest of your component remains unchanged
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg">
-      <h1 className="text-2xl font-bold mb-4">
-        {sectionFiles[currentIndex].title}
-      </h1>
-      <div className="prose max-w-none">
-        <ReactMarkdown
-          remarkPlugins={[remarkGfm]}
-          components={{
-            code({ node, className, children, ...props }) {
-              const match = /language-(\w+)/.exec(className || "");
-              if (match) {
-                const cleanCode = String(children).replace(/\n$/, "");
+    <div className="bg-gray-200 p-8">
+      <div className="max-w-4xl mx-auto p-8 bg-white shadow-lg rounded-lg">
+        <h1 className="text-2xl font-bold mb-4 bg-gray-300 p-4 rounded-lg">
+          {sectionFiles[currentIndex].title}
+        </h1>
+        <div className="prose max-w-none">
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            components={{
+              code({ node, className, children, ...props }) {
+                const match = /language-(\w+)/.exec(className || "");
+                if (match) {
+                  const cleanCode = String(children).replace(/\n$/, "");
+                  return (
+                    <SyntaxHighlighter
+                      style={materialDark}
+                      language={match[1]}
+                      PreTag="div"
+                      className="mb-6 py-2"
+                    >
+                      {cleanCode}
+                    </SyntaxHighlighter>
+                  );
+                }
                 return (
-                  <SyntaxHighlighter
-                    style={materialDark}
-                    language={match[1]}
-                    PreTag="div"
-                    className="mb-6"
-                  >
-                    {cleanCode}
-                  </SyntaxHighlighter>
+                  <code className="bg-gray-200 px-1 rounded text-sm">
+                    {children}
+                  </code>
                 );
-              }
-              return (
-                <code className="bg-gray-200 px-1 rounded text-sm">
-                  {children}
-                </code>
-              );
-            },
-            ul: ({ node, ...props }) => (
-              <ul {...props} className="mb-4 list-disc pl-6 break-words" />
-            ),
-            ol: ({ node, ...props }) => (
-              <ol {...props} className="mb-4 list-decimal pl-6 break-words" />
-            ),
-            li: ({ node, ...props }) => <li {...props} className="mb-2 pl-4" />,
-            p: ({ node, ...props }) => <p {...props} className="mb-4" />,
-          }}
-        >
-          {content}
-        </ReactMarkdown>
-      </div>
+              },
+              ul: ({ node, ...props }) => (
+                <ul
+                  {...props}
+                  className="mb-4 list-disc pl-6 break-words py-2"
+                />
+              ),
+              ol: ({ node, ...props }) => (
+                <ol {...props} className="mb-4 list-decimal pl-6 break-words" />
+              ),
+              li: ({ node, ...props }) => (
+                <li {...props} className="mb-2 pl-4" />
+              ),
+              p: ({ node, ...props }) => <p {...props} className="mb-4 py-2" />,
+              a: ({ node, ...props }) => (
+                <div className="inline-flex items-center text-indigo-500 font-semibold border-b py-1">
+                  <a target="_blank" {...props} className="" />{" "}
+                  <ExternalLink size={14} className="ml-1" />
+                </div>
+              ),
+            }}
+          >
+            {content}
+          </ReactMarkdown>
+        </div>
 
-      <div className="flex justify-between mt-6">
-        <button
-          className={`px-4 py-2 bg-gray-200 rounded ${
-            currentIndex === 0 ? "opacity-50 cursor-not-allowed" : ""
-          } cursor-pointer`}
-          onClick={handlePrev}
-          disabled={currentIndex === 0}
-        >
-          Previous
-        </button>
-        {currentIndex === sectionFiles.length - 1 ? (
+        <div className="flex justify-between mt-6">
           <button
-            className="px-4 py-2 bg-green-500 text-white rounded cursor-pointer"
-            onClick={handleFinish}
-          >
-            Finish
-          </button>
-        ) : (
-          <button
-            className={`px-4 py-2 bg-blue-500 text-white rounded ${
-              currentIndex === sectionFiles.length - 1
-                ? "opacity-50 cursor-not-allowed"
-                : ""
+            className={`flex items-center px-4 py-2 bg-gray-200 rounded-full ${
+              currentIndex === 0 ? "opacity-50 cursor-not-allowed" : ""
             } cursor-pointer`}
-            onClick={handleNext}
-            disabled={currentIndex === sectionFiles.length - 1}
+            onClick={handlePrev}
+            disabled={currentIndex === 0}
           >
-            Next
+            <ArrowLeft size={14} className="mr-2" /> Previous
           </button>
-        )}
+          {currentIndex === sectionFiles.length - 1 ? (
+            <button
+              className="flex items-center px-4 py-2 bg-green-600 text-white rounded-full cursor-pointer"
+              onClick={handleFinish}
+            >
+              Finish Presentation
+            </button>
+          ) : (
+            <button
+              className={`flex items-center px-4 py-2 bg-blue-500 text-white rounded-full ${
+                currentIndex === sectionFiles.length - 1
+                  ? "opacity-50 cursor-not-allowed"
+                  : ""
+              } cursor-pointer`}
+              onClick={handleSectionChange}
+              disabled={currentIndex === sectionFiles.length - 1}
+            >
+              {loading ? (
+                <Loader2 size={14} className="mr-2 animate-spin" />
+              ) : (
+                <div className="flex items-center">
+                  Next <ArrowRight size={14} className="ml-2" />
+                </div>
+              )}
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
